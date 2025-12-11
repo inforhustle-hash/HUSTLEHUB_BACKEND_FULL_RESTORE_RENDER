@@ -1,0 +1,14 @@
+{
+  "name":"hustlehub-backend",
+  "version":"3.0.0",
+  "main":"server.js",
+  "scripts":{"start":"node server.js"},
+  "dependencies":{
+    "express":"latest",
+    "mongoose":"latest",
+    "cors":"latest",
+    "dotenv":"latest",
+    "jsonwebtoken":"latest",
+    "bcryptjs":"latest"
+  }
+}
