@@ -2,7 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-export const registerUser = async (req, res) => {
+export const register = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -13,20 +13,20 @@ export const registerUser = async (req, res) => {
     const user = await User.create({ email, password: hashed });
 
     res.json({ message: "Registered" });
-  } catch (err) {
+  } catch (e) {
     res.status(500).json({ message: "Register failed" });
   }
 };
 
-export const loginUser = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ message: "Invalid credentials" });
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) return res.status(400).json({ message: "Invalid credentials" });
 
     const token = jwt.sign(
       { id: user._id },
@@ -34,11 +34,9 @@ export const loginUser = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    res.json({ token, user });
-  } catch (err) {
+    res.json({ token, email: user.email });
+  } catch (e) {
     res.status(500).json({ message: "Login failed" });
   }
 };
-
- 
 
